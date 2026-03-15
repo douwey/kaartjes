@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ellis Woordjes 🌈</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--r:#ff3d6b;--o:#ff8c00;--y:#ffd600;--g:#00c853;--b:#0091ea;--iv:#651fff;--v:#d500f9;--dark:#1a0533;--card:rgba(255,255,255,0.93)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;background:#0d0020}
+.rbg{position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#ff006680,#ff8c0080,#ffd60080,#00c85380,#0091ea80,#651fff80,#d500f980);background-size:400% 400%;animation:bgS 6s ease infinite}
+@keyframes bgS{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.dots{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.dot{position:absolute;border-radius:50%;animation:fdot linear infinite;opacity:.7}
+@keyframes fdot{0%{transform:translateY(110vh) rotate(0);opacity:.8}100%{transform:translateY(-20vh) rotate(720deg);opacity:0}}
+.scr{display:none;position:relative;z-index:10;min-height:100vh;padding:16px;flex-direction:column;align-items:center}
+.scr.on{display:flex}
+.title{font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,6vw,3rem);font-weight:800;background:linear-gradient(90deg,var(--r),var(--o),var(--y),var(--g),var(--b),var(--iv),var(--v));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rtxt 3s linear infinite;filter:drop-shadow(0 0 16px rgba(255,214,0,.4));line-height:1.1;text-align:center}
+@keyframes rtxt{to{background-position:200% center}}
+.stars{font-size:1.2rem;letter-spacing:4px;margin-top:4px;animation:sb 1s ease-in-out infinite alternate;text-align:center}
+@keyframes sb{from{transform:scale(1)}to{transform:scale(1.12)}}
+.hdr{padding:16px 8px 12px;width:100%}
+.card{background:var(--card);border-radius:24px;padding:22px;width:100%;max-width:660px;box-shadow:0 6px 32px rgba(0,0,0,.28),0 0 0 3px rgba(255,255,255,.12);backdrop-filter:blur(8px);position:relative;overflow:hidden;margin-bottom:14px}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,61,107,.05),rgba(101,31,255,.05));pointer-events:none}
+.slbl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--iv);margin-bottom:8px}
+.lists-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.list-card{border:3px solid #e0d0ff;border-radius:16px;padding:14px 12px;background:white;cursor:pointer;transition:all .18s;text-align:center;position:relative}
+.list-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.list-card .lc-icon{font-size:1.6rem;display:block;margin-bottom:4px}
+.list-card .lc-name{font-size:.85rem;font-weight:800;color:var(--dark);word-break:break-word}
+.list-card .lc-count{font-size:.72rem;color:#aaa;font-weight:600;margin-top:2px}
+.list-card .lc-del{position:absolute;top:6px;right:6px;background:none;border:none;cursor:pointer;font-size:.75rem;color:#ccc;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.list-card .lc-del:hover{background:#ffe0e8;color:var(--r)}
+.btn-new-list{border:3px dashed #c4b0ff;border-radius:14px;padding:14px 12px;background:none;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:var(--iv);cursor:pointer;transition:all .2s;text-align:center;width:100%;margin-top:4px}
+.btn-new-list:hover{border-color:var(--v);background:#faf0ff}
+.new-list-row{display:none;gap:8px;margin-bottom:14px}
+.nl-input{flex:1;border:3px solid #e0d0ff;border-radius:12px;padding:10px 14px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--dark);outline:none;transition:all .2s;background:white}
+.nl-input:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(0,145,234,.15)}
+.btn-s{border:none;border-radius:10px;padding:10px 16px;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;transition:all .15s}
+.btn-ok{background:linear-gradient(135deg,var(--b),var(--iv));color:white}.btn-ok:hover{transform:scale(1.04)}
+.btn-cx{background:#f0e8ff;color:var(--iv)}.btn-cx:hover{background:#e0d0ff}
+.save-badge{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;padding:6px 12px;border-radius:10px;background:#f0ebff;border:2px solid #ddd0ff;margin-bottom:14px;color:#777}
+.save-dot{width:8px;height:8px;border-radius:50%;background:#ccc;transition:background .3s;flex-shrink:0}
+.save-dot.saving{background:var(--o);animation:pulse .6s infinite}
+.save-dot.saved{background:var(--g)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.tbl-wrap{border-radius:14px;overflow:hidden;border:3px solid #e0d0ff;margin-bottom:12px}
+.tbl-head{display:grid;grid-template-columns:30px 1fr 1fr 38px;background:linear-gradient(135deg,#ffe0f0,#e0e8ff);padding:9px 10px;gap:6px}
+.tbl-head span{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--iv)}
+.wrows{max-height:280px;overflow-y:auto}
+.wrow{display:grid;grid-template-columns:30px 1fr 1fr 38px;align-items:center;gap:6px;padding:3px 6px;border-bottom:2px solid #f0e8ff;transition:background .15s}
+.wrow:last-child{border-bottom:none}
+.wrow:hover{background:#faf5ff}
+.rnum{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--b),var(--iv));color:white;font-size:.66rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.wrow input{border:2px solid #e0d0ff;border-radius:9px;padding:7px 9px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:600;color:var(--dark);width:100%;outline:none;transition:all .2s;background:white}
+.wrow input:focus{border-color:var(--b);box-shadow:0 0 0 2px rgba(0,145,234,.12)}
+.btn-del{background:none;border:none;cursor:pointer;color:#ccc;font-size:1rem;width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.btn-del:hover{background:#ffe0e8;color:var(--r);transform:scale(1.2)}
+.btn-add{width:100%;border:3px dashed #c4b0ff;border-radius:12px;padding:9px;background:none;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;color:var(--iv);cursor:pointer;transition:all .2s;margin-bottom:18px}
+.btn-add:hover{border-color:var(--v);background:#faf0ff}
+.chips{display:flex;flex-wrap:wrap;gap:7px;max-height:130px;overflow-y:auto;padding:3px}
+.chip{border:2px solid #e0d0ff;border-radius:24px;padding:4px 12px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .18s;background:white;color:#888;user-select:none}
+.chip.sel{background:linear-gradient(135deg,var(--b),var(--iv));border-color:var(--b);color:white;transform:scale(1.05);box-shadow:0 3px 10px rgba(0,145,234,.3)}
+.sel-row{display:flex;gap:7px;margin-bottom:9px}
+.bsm{border:2px solid;border-radius:9px;padding:5px 12px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .14s;background:white}
+.bsm-a{border-color:var(--b);color:var(--b)}.bsm-a:hover{background:var(--b);color:white}
+.bsm-n{border-color:#ccc;color:#888}.bsm-n:hover{background:#eee}
+.mode-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+.mbtn{flex:1;min-width:130px;border:3px solid #e0d0ff;border-radius:14px;padding:13px 14px;background:white;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.84rem;font-weight:700;color:#888;transition:all .2s;text-align:center}
+.mbtn .mi{font-size:1.4rem;display:block;margin-bottom:3px}
+.mbtn:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,.1)}
+.mbtn.sel-mc{border-color:var(--g);background:linear-gradient(135deg,#e8fff2,#d0ffe8);color:#007a33;box-shadow:0 3px 14px rgba(0,200,83,.2)}
+.mbtn.sel-tp{border-color:var(--o);background:linear-gradient(135deg,#fff8e0,#fff0c0);color:#a06000;box-shadow:0 3px 14px rgba(255,140,0,.2)}
+.btn-start{width:100%;border:none;border-radius:16px;padding:16px;font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:white;cursor:pointer;background:linear-gradient(135deg,var(--r),var(--o),var(--y),var(--g),var(--b),var(--iv),var(--v));background-size:300% auto;animation:rBtn 3s linear infinite;box-shadow:0 5px 24px rgba(255,61,107,.35);transition:transform .2s,box-shadow .2s}
+@keyframes rBtn{to{background-position:300% center}}
+.btn-start:hover{transform:scale(1.02) translateY(-2px);box-shadow:0 9px 30px rgba(255,61,107,.45)}
+.err{color:var(--r);font-size:.82rem;font-weight:700;margin-top:8px;display:none;text-align:center}
+.qtop{width:100%;max-width:580px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.pt{font-size:.82rem;font-weight:800;color:white;white-space:nowrap}
+.pbar{flex:1;height:13px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;border:2px solid rgba(255,255,255,.25)}
+.pfill{height:100%;background:linear-gradient(90deg,var(--y),var(--g),var(--b));border-radius:99px;transition:width .5s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.pfill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shim 1.5s infinite}
+@keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(200%)}}
+.sbadge{background:linear-gradient(135deg,var(--y),var(--o));border-radius:10px;padding:5px 12px;font-size:.82rem;font-weight:800;color:white;box-shadow:0 3px 10px rgba(255,140,0,.35);white-space:nowrap}
+.qtag{display:inline-block;border-radius:18px;padding:3px 12px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.tag-mc{background:linear-gradient(135deg,#e0ffe8,#c0ffd8);color:#007a33}
+.tag-tp{background:linear-gradient(135deg,#fff8d0,#ffe89c);color:#a06000}
+.qprompt{font-size:.83rem;color:#999;font-weight:700;margin-bottom:6px}
+.qword{font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,6vw,2.8rem);font-weight:800;background:linear-gradient(135deg,var(--r),var(--v));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;line-height:1.1;animation:wp .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes wp{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.qsub{font-size:.8rem;color:#aaa;font-weight:600;margin-bottom:22px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.obtn{border:3px solid #e8e0ff;border-radius:14px;padding:12px 16px;background:white;font-family:'Nunito',sans-serif;font-size:.94rem;font-weight:700;color:var(--dark);cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:all .18s}
+.oltr{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#e8e0ff,#d0c8ff);color:var(--iv);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s}
+.obtn:hover:not(.dis){transform:translateX(5px) scale(1.01);border-color:var(--b);box-shadow:0 4px 14px rgba(0,145,234,.14)}
+.obtn:hover:not(.dis) .oltr{background:linear-gradient(135deg,var(--b),var(--iv));color:white}
+.obtn.ok{border-color:var(--g);background:linear-gradient(135deg,#e8fff0,#c8ffd8);color:#007a33;animation:cpop .4s ease}
+.obtn.ok .oltr{background:linear-gradient(135deg,var(--g),#00a843);color:white}
+@keyframes cpop{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.obtn.ng{border-color:var(--r);background:linear-gradient(135deg,#fff0f3,#ffd0da);color:#c0001a}
+.obtn.ng .oltr{background:linear-gradient(135deg,var(--r),#c00030);color:white}
+.obtn.dis{cursor:default}
+.tinput{width:100%;border:3px solid #e0d0ff;border-radius:14px;padding:14px 18px;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;color:var(--dark);text-align:center;outline:none;transition:all .2s;background:white;margin-bottom:10px}
+.tinput:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(0,145,234,.14)}
+.tinput.ok{border-color:var(--g);background:linear-gradient(135deg,#e8fff0,#c8ffd8);color:#007a33}
+.tinput.ng{border-color:var(--r);background:linear-gradient(135deg,#fff0f3,#ffd0da);color:#c0001a}
+.btn-chk{width:100%;border:none;border-radius:12px;padding:13px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;cursor:pointer;background:linear-gradient(135deg,var(--b),var(--iv));box-shadow:0 4px 14px rgba(101,31,255,.28);transition:all .18s}
+.btn-chk:hover{transform:scale(1.02)}
+.btn-chk:disabled{opacity:.4;cursor:default;transform:none}
+.fb{min-height:30px;margin-top:12px;font-size:.97rem;font-weight:800;opacity:0;transition:opacity .25s;border-radius:11px;padding:7px 14px;text-align:center}
+.fb.on{opacity:1}
+.fb.g{background:linear-gradient(135deg,#e0fff0,#c0ffd8);color:#007a33}
+.fb.f{background:linear-gradient(135deg,#fff0f0,#ffd8d8);color:#c0001a}
+.btn-next{margin-top:12px;width:100%;border:none;border-radius:12px;padding:13px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;cursor:pointer;background:linear-gradient(135deg,var(--o),var(--r));box-shadow:0 4px 14px rgba(255,140,0,.28);transition:all .18s;display:none}
+.btn-next.on{display:block}
+.btn-next:hover{transform:scale(1.02)}
+.semoji{font-size:4rem;display:block;margin-bottom:8px;animation:pi .6s cubic-bezier(.34,1.56,.64,1) both;text-align:center}
+@keyframes pi{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.stitle{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--r),var(--v));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center}
+.spct{font-family:'Baloo 2',cursive;font-size:4.5rem;font-weight:800;background:linear-gradient(135deg,var(--y),var(--o));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin:6px 0 3px;text-align:center}
+.sfrac{font-size:.95rem;font-weight:700;color:#aaa;margin-bottom:20px;text-align:center}
+.rlist{border-radius:14px;overflow:hidden;border:3px solid #e8e0ff;margin-bottom:20px;max-height:220px;overflow-y:auto}
+.ri{display:flex;align-items:center;gap:9px;padding:8px 12px;border-bottom:2px solid #f0e8ff;font-size:.85rem;font-weight:600}
+.ri:last-child{border-bottom:none}
+.rien{color:var(--dark);flex:1;font-weight:700}
+.rinl{color:#888;flex:1}
+.sbtns{display:flex;gap:9px;flex-wrap:wrap}
+.btn-again{flex:1;border:none;border-radius:12px;padding:13px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;cursor:pointer;background:linear-gradient(135deg,var(--g),var(--b));box-shadow:0 4px 14px rgba(0,200,83,.28);transition:all .18s}
+.btn-again:hover{transform:scale(1.03)}
+.btn-back{flex:1;border:3px solid #e0d0ff;border-radius:12px;padding:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;color:var(--iv);cursor:pointer;background:white;transition:all .18s}
+.btn-back:hover{background:#f5f0ff;transform:scale(1.02)}
+.confp{position:fixed;z-index:999;border-radius:2px;pointer-events:none;animation:cf 1.4s ease-out forwards}
+@keyframes cf{0%{opacity:1}100%{transform:translateY(75vh) rotate(720deg) scale(.2);opacity:0}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#d0c0ff;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="rbg"></div>
+<div class="dots" id="dots"></div>
+
+<!-- LIJSTEN -->
+<div id="s-lists" class="scr on">
+  <div class="hdr"><div class="title">✨ Ellis Woordjes ✨</div><div class="stars">🌈 🦄 🌟 💖 🎉</div></div>
+  <div class="card" style="max-width:660px;width:100%">
+    <div class="slbl">📚 Mijn woordenlijsten</div>
+    <div id="lists-grid" class="lists-grid"></div>
+    <div class="new-list-row" id="new-list-row">
+      <input id="nl-name" class="nl-input" placeholder="Naam van de lijst..." maxlength="30">
+      <button class="btn-s btn-ok" id="nl-ok">✓ OK</button>
+      <button class="btn-s btn-cx" id="nl-cancel">✕</button>
+    </div>
+    <button class="btn-new-list" id="btn-new-list">✨ Nieuwe woordenlijst maken</button>
+    <div style="font-size:.72rem;color:#bbb;text-align:center;margin-top:12px;font-weight:600">💾 Woordjes worden opgeslagen in deze browser op dit apparaat</div>
+  </div>
+</div>
+
+<!-- INVOER -->
+<div id="s-invoer" class="scr">
+  <div class="hdr"><div class="title">✨ Ellis Woordjes ✨</div><div class="stars">🌈 🦄 🌟 💖 🎉</div></div>
+  <div class="card" style="max-width:660px;width:100%">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <button id="btn-terug-lijst" style="background:#f0e8ff;border:none;cursor:pointer;font-size:.85rem;font-weight:800;padding:7px 12px;border-radius:10px;color:var(--iv);transition:all .15s" onmouseover="this.style.background='#e0d0ff'" onmouseout="this.style.background='#f0e8ff'">◀ Lijsten</button>
+      <div id="list-title" style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--r),var(--iv));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"></div>
+    </div>
+    <div class="save-badge">
+      <div class="save-dot" id="save-dot"></div>
+      <span id="save-txt">Wijzigingen worden automatisch opgeslagen</span>
+    </div>
+    <div class="slbl">📝 Woordjes invoeren</div>
+    <div class="tbl-wrap">
+      <div class="tbl-head"><span>#</span><span>🇬🇧 Engels</span><span>🇳🇱 Nederlands</span><span></span></div>
+      <div class="wrows" id="wrows"></div>
+    </div>
+    <button class="btn-add" id="btn-add">✨ Woordje toevoegen</button>
+    <div class="slbl">🎯 Welke woordjes oefenen?</div>
+    <div style="margin-bottom:18px">
+      <div class="sel-row">
+        <button class="bsm bsm-a" id="btn-all">✅ Alles</button>
+        <button class="bsm bsm-n" id="btn-none">☐ Geen</button>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="slbl">🎮 Speelmodus</div>
+    <div class="mode-row">
+      <button class="mbtn sel-mc" data-m="mc"><span class="mi">🔤</span>Meerkeuze<span style="display:block;font-size:.72rem;opacity:.7;font-weight:600;margin-top:2px">Kies uit 5 woorden</span></button>
+      <button class="mbtn" data-m="tp"><span class="mi">⌨️</span>Zelf invullen<span style="display:block;font-size:.72rem;opacity:.7;font-weight:600;margin-top:2px">Typ het antwoord</span></button>
+    </div>
+    <button class="btn-start" id="btn-start">🚀 Start met leren! 🚀</button>
+    <div class="err" id="err">⚠️ Vul minimaal 5 woordparen in en selecteer er minstens 2!</div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="s-quiz" class="scr">
+  <div class="hdr"><div class="title">✨ Ellis Woordjes ✨</div></div>
+  <div class="qtop" style="max-width:580px;width:100%">
+    <span class="pt" id="qlbl">1/10</span>
+    <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+    <div class="sbadge" id="sbadge">⭐ 0</div>
+  </div>
+  <div class="card" style="max-width:580px;width:100%;text-align:center">
+    <div class="qtag tag-mc" id="qtag">Meerkeuze</div>
+    <div class="qprompt">Wat betekent dit Engelse woord?</div>
+    <div class="qword" id="qword">apple</div>
+    <div class="qsub" id="qsub">Kies het Nederlandse woord 👇</div>
+    <div id="mc-sec"><div class="opts" id="opts"></div></div>
+    <div id="tp-sec" style="display:none">
+      <input type="text" class="tinput" id="tinput" placeholder="Typ het Nederlandse woord..." autocomplete="off" spellcheck="false">
+      <button class="btn-chk" id="btn-chk">✔ Controleer</button>
+    </div>
+    <div class="fb" id="fb"></div>
+    <button class="btn-next" id="btn-next">Volgende ➡️</button>
+  </div>
+</div>
+
+<!-- SCORE -->
+<div id="s-score" class="scr">
+  <div class="hdr"><div class="title">✨ Ellis Woordjes ✨</div></div>
+  <div class="card" style="max-width:540px;width:100%">
+    <span class="semoji" id="semoji">🏆</span>
+    <div class="stitle" id="stitle">Super goed!</div>
+    <div class="spct" id="spct">90%</div>
+    <div class="sfrac" id="sfrac">9 van 10 goed</div>
+    <div class="rlist" id="rlist"></div>
+    <div class="sbtns">
+      <button class="btn-again" id="btn-again">🔄 Opnieuw!</button>
+      <button class="btn-back" id="btn-back">📝 Woordjes aanpassen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LT=['A','B','C','D','E'];
+const EMOJIS=['📗','📘','📙','📕','📓','🌟','🦄','🌈','🎯','🎪','🚀','🎉','🐱','🐶','🦋','🍀'];
+const SK='ellis-woordjes-v1';
+
+let lists={}, curList='', words=[], selIdx=new Set(), mode='mc';
+let qwords=[], qIdx=0, score=0, results=[], answered=false;
+let saveTimer=null;
+
+// dots
+(function(){
+  const cl=['#ff3d6b','#ff8c00','#ffd600','#00c853','#0091ea','#651fff','#d500f9'];
+  const dc=document.getElementById('dots');
+  for(let i=0;i<28;i++){
+    const d=document.createElement('div');d.className='dot';
+    const s=Math.random()*11+4;
+    d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${cl[~~(Math.random()*cl.length)]};animation-duration:${Math.random()*9+7}s;animation-delay:${Math.random()*7}s`;
+    dc.appendChild(d);
+  }
+})();
+
+function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function burst(good){
+  const cl=good?['#ffd600','#00c853','#0091ea','#fff','#ff3d6b']:['#ff3d6b','#ff8c00','#ffd600'];
+  for(let i=0;i<16;i++){
+    const e=document.createElement('div');e.className='confp';
+    e.style.cssText=`left:${20+Math.random()*60}%;top:${15+Math.random()*25}%;background:${cl[~~(Math.random()*cl.length)]};width:${6+Math.random()*7}px;height:${6+Math.random()*7}px;animation-duration:${.7+Math.random()*.7}s;animation-delay:${Math.random()*.15}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(e);setTimeout(()=>e.remove(),1800);
+  }
+}
+
+// === STORAGE ===
+function loadAll(){
+  try{const r=localStorage.getItem(SK);lists=r?JSON.parse(r):{};}
+  catch(e){lists={};}
+  renderLists();
+}
+
+function saveAll(){
+  try{localStorage.setItem(SK,JSON.stringify(lists));setSaveStatus('saved');}
+  catch(e){setSaveStatus('err');}
+}
+
+function setSaveStatus(s){
+  const dot=document.getElementById('save-dot');
+  const txt=document.getElementById('save-txt');
+  dot.className='save-dot '+s;
+  if(s==='saving')txt.textContent='Opslaan...';
+  else if(s==='saved')txt.textContent='Opgeslagen ✅';
+  else txt.textContent='Wijzigingen worden automatisch opgeslagen';
+}
+
+function scheduleSave(){
+  setSaveStatus('saving');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    if(!curList)return;
+    const filled=getFilledWords();
+    lists[curList].words=filled;
+    saveAll();
+    rebuildChips(filled);
+  },600);
+}
+
+// === LIJSTEN ===
+function renderLists(){
+  const grid=document.getElementById('lists-grid');
+  grid.innerHTML='';
+  const names=Object.keys(lists);
+  if(!names.length){
+    grid.innerHTML='<div style="color:#aaa;font-size:.85rem;font-weight:600;padding:8px 4px;grid-column:1/-1">Nog geen lijsten — maak er een aan! 👇</div>';
+    return;
+  }
+  names.forEach((name,i)=>{
+    const cnt=(lists[name]?.words||[]).length;
+    const card=document.createElement('div');card.className='list-card';
+    card.innerHTML=`<button class="lc-del">✕</button><span class="lc-icon">${EMOJIS[i%EMOJIS.length]}</span><div class="lc-name">${esc(name)}</div><div class="lc-count">${cnt} woordje${cnt!==1?'s':''}</div>`;
+    card.addEventListener('click',e=>{if(!e.target.classList.contains('lc-del'))openList(name);});
+    card.querySelector('.lc-del').addEventListener('click',e=>{
+      e.stopPropagation();
+      if(confirm(`"${name}" verwijderen?`)){delete lists[name];saveAll();renderLists();}
+    });
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById('btn-new-list').addEventListener('click',()=>{
+  document.getElementById('new-list-row').style.display='flex';
+  document.getElementById('btn-new-list').style.display='none';
+  document.getElementById('nl-name').focus();
+});
+document.getElementById('nl-cancel').addEventListener('click',cancelNew);
+document.getElementById('nl-ok').addEventListener('click',createList);
+document.getElementById('nl-name').addEventListener('keydown',e=>{if(e.key==='Enter')createList();if(e.key==='Escape')cancelNew();});
+
+function cancelNew(){
+  document.getElementById('new-list-row').style.display='none';
+  document.getElementById('btn-new-list').style.display='block';
+  document.getElementById('nl-name').value='';
+}
+
+function createList(){
+  const name=document.getElementById('nl-name').value.trim();
+  if(!name)return;
+  if(lists[name]){alert('Er bestaat al een lijst met die naam!');return;}
+  lists[name]={words:[],created:Date.now()};
+  saveAll();cancelNew();renderLists();openList(name);
+}
+
+function openList(name){
+  curList=name;
+  const saved=lists[name]?.words||[];
+  selIdx=new Set(saved.map((_,i)=>i));
+  document.getElementById('list-title').textContent='📚 '+name;
+  document.getElementById('wrows').innerHTML='';
+  if(saved.length>0)saved.forEach(w=>addRow(w.en,w.nl));
+  else addRow();
+  setSaveStatus('');
+  show('s-invoer');
+}
+
+document.getElementById('btn-terug-lijst').addEventListener('click',()=>{renderLists();show('s-lists');});
+
+// === INVOER ===
+function addRow(en='',nl=''){
+  const rows=document.getElementById('wrows');
+  const idx=rows.querySelectorAll('.wrow').length+1;
+  const row=document.createElement('div');row.className='wrow';
+  row.innerHTML=`<div class="rnum">${idx}</div><input type="text" class="inp-en" placeholder="English" value="${esc(en)}" autocomplete="off" spellcheck="false"><input type="text" class="inp-nl" placeholder="Nederlands" value="${esc(nl)}" autocomplete="off" spellcheck="false"><button class="btn-del">✕</button>`;
+  row.querySelector('.btn-del').addEventListener('click',()=>{row.remove();renumber();scheduleSave();});
+  row.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',scheduleSave));
+  rows.appendChild(row);
+  if(!en)row.querySelector('.inp-en').focus();
+}
+
+function renumber(){
+  document.querySelectorAll('.wrow').forEach((r,i)=>r.querySelector('.rnum').textContent=i+1);
+}
+
+function getFilledWords(){
+  return [...document.querySelectorAll('.wrow')].map(r=>({
+    en:r.querySelector('.inp-en').value.trim(),
+    nl:r.querySelector('.inp-nl').value.trim()
+  })).filter(w=>w.en&&w.nl);
+}
+
+function rebuildChips(filled){
+  if(!filled)filled=getFilledWords();
+  const c=document.getElementById('chips');c.innerHTML='';
+  filled.forEach((w,i)=>{
+    const ch=document.createElement('div');
+    ch.className='chip'+(selIdx.has(i)?' sel':'');
+    ch.textContent=w.en;
+    ch.addEventListener('click',()=>{selIdx.has(i)?selIdx.delete(i):selIdx.add(i);ch.classList.toggle('sel');});
+    c.appendChild(ch);
+  });
+}
+
+document.getElementById('btn-add').addEventListener('click',()=>addRow());
+document.getElementById('btn-all').addEventListener('click',()=>{const f=getFilledWords();selIdx=new Set(f.map((_,i)=>i));rebuildChips(f);});
+document.getElementById('btn-none').addEventListener('click',()=>{selIdx.clear();rebuildChips();});
+
+document.querySelectorAll('.mbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.mbtn').forEach(x=>x.classList.remove('sel-mc','sel-tp'));
+    mode=b.dataset.m;b.classList.add(mode==='mc'?'sel-mc':'sel-tp');
+  });
+});
+
+document.getElementById('btn-start').addEventListener('click',()=>{
+  const filled=getFilledWords();
+  const sel=[...selIdx].filter(i=>i<filled.length).map(i=>filled[i]);
+  const err=document.getElementById('err');
+  if(filled.length<5||sel.length<2){err.style.display='block';return;}
+  err.style.display='none';words=filled;startQuiz(sel);
+});
+
+// === QUIZ ===
+function startQuiz(sel){
+  qwords=shuf(sel);qIdx=0;score=0;results=[];answered=false;
+  const tag=document.getElementById('qtag'),sub=document.getElementById('qsub');
+  if(mode==='tp'){
+    tag.textContent='⌨️ Zelf invullen';tag.className='qtag tag-tp';
+    sub.textContent='Typ het Nederlandse woord 👇';
+    document.getElementById('mc-sec').style.display='none';
+    document.getElementById('tp-sec').style.display='block';
+  }else{
+    tag.textContent='🔤 Meerkeuze';tag.className='qtag tag-mc';
+    sub.textContent='Kies het Nederlandse woord 👇';
+    document.getElementById('mc-sec').style.display='block';
+    document.getElementById('tp-sec').style.display='none';
+  }
+  show('s-quiz');renderQ();
+}
+
+function renderQ(){
+  answered=false;
+  const q=qwords[qIdx],tot=qwords.length;
+  document.getElementById('qlbl').textContent=`${qIdx+1}/${tot}`;
+  document.getElementById('sbadge').textContent=`⭐ ${score}`;
+  document.getElementById('pfill').style.width=`${(qIdx/tot)*100}%`;
+  const qw=document.getElementById('qword');
+  qw.style.animation='none';
+  requestAnimationFrame(()=>{qw.style.animation='';qw.textContent=q.en;});
+  document.getElementById('fb').className='fb';document.getElementById('fb').textContent='';
+  document.getElementById('btn-next').className='btn-next';
+  if(mode==='mc')renderMC(q);else renderTP();
+}
+
+function renderMC(q){
+  const pool=words.map(w=>w.nl).filter(n=>n!==q.nl);
+  const opts=shuf([q.nl,...shuf(pool).slice(0,4)]);
+  const g=document.getElementById('opts');g.innerHTML='';
+  opts.forEach((opt,i)=>{
+    const b=document.createElement('button');b.className='obtn';
+    b.innerHTML=`<span class="oltr">${LT[i]}</span><span>${esc(opt)}</span>`;
+    b.addEventListener('click',()=>handleMC(opt,q.nl,b));
+    g.appendChild(b);
+  });
+}
+
+function handleMC(chosen,correct,el){
+  if(answered)return;answered=true;
+  const ok=chosen===correct;
+  document.querySelectorAll('.obtn').forEach(b=>{
+    b.classList.add('dis');
+    if(b.querySelector('span:last-child').textContent===correct)b.classList.add('ok');
+  });
+  if(ok){el.classList.add('ok');score++;showFB(true);}
+  else{el.classList.add('ng');showFB(false,correct);}
+  results.push({word:qwords[qIdx],correct:ok});afterAns();
+}
+
+function renderTP(){
+  const inp=document.getElementById('tinput');
+  inp.value='';inp.className='tinput';inp.disabled=false;
+  document.getElementById('btn-chk').disabled=false;
+  setTimeout(()=>inp.focus(),100);
+}
+
+function checkType(){
+  if(answered)return;
+  const q=qwords[qIdx],inp=document.getElementById('tinput');
+  const val=inp.value.trim().toLowerCase();if(!val)return;
+  answered=true;inp.disabled=true;document.getElementById('btn-chk').disabled=true;
+  const ok=val===q.nl.toLowerCase();
+  inp.className='tinput '+(ok?'ok':'ng');
+  if(ok){score++;showFB(true);}else showFB(false,q.nl);
+  results.push({word:q,correct:ok});afterAns();
+}
+
+document.getElementById('btn-chk').addEventListener('click',checkType);
+document.getElementById('tinput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!answered)checkType();});
+
+function showFB(good,correct=''){
+  burst(good);
+  const fb=document.getElementById('fb');
+  fb.textContent=good?['🎉 Super goed!','🌟 Fantastisch!','🎊 Geweldig!','✨ Top!','🦄 Briljant!','🎈 Wauw!'][~~(Math.random()*6)]:`❌ Helaas! Het was: ${correct}`;
+  fb.className='fb on '+(good?'g':'f');
+}
+
+function afterAns(){
+  const bn=document.getElementById('btn-next');
+  bn.className='btn-next on';
+  bn.textContent=(qIdx+1>=qwords.length)?'🏁 Bekijk resultaten!':'Volgende ➡️';
+}
+
+document.getElementById('btn-next').addEventListener('click',()=>{qIdx++;if(qIdx>=qwords.length)showScore();else renderQ();});
+
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('s-quiz').classList.contains('on'))return;
+  if(e.key==='Enter'){const bn=document.getElementById('btn-next');if(bn.classList.contains('on'))bn.click();}
+  if(mode==='mc'&&!answered){const i=LT.indexOf(e.key.toUpperCase());if(i!==-1){const bs=document.querySelectorAll('.obtn');if(bs[i])bs[i].click();}}
+});
+
+// === SCORE ===
+function showScore(){
+  const tot=qwords.length,pct=Math.round((score/tot)*100);
+  document.getElementById('semoji').textContent=pct===100?'🏆🌈':pct>=80?'🌟🎉':pct>=60?'👍😊':'📚💪';
+  document.getElementById('stitle').textContent=pct===100?'PERFECT! Briljant!':pct>=80?'Super goed!':pct>=60?'Goed gedaan!':'Blijf oefenen!';
+  document.getElementById('spct').textContent=pct+'%';
+  document.getElementById('sfrac').textContent=`${score} van ${tot} goed`;
+  const rl=document.getElementById('rlist');rl.innerHTML='';
+  results.forEach(r=>{
+    const d=document.createElement('div');d.className='ri';
+    d.innerHTML=`<span>${r.correct?'✅':'❌'}</span><span class="rien">${esc(r.word.en)}</span><span class="rinl">${esc(r.word.nl)}</span>`;
+    rl.appendChild(d);
+  });
+  for(let i=0;i<3;i++)setTimeout(()=>burst(true),i*280);
+  show('s-score');
+}
+
+document.getElementById('btn-again').addEventListener('click',()=>{
+  const filled=getFilledWords();
+  const sel=[...selIdx].filter(i=>i<filled.length).map(i=>filled[i]);
+  if(sel.length>=2){words=filled;startQuiz(sel);}else show('s-invoer');
+});
+document.getElementById('btn-back').addEventListener('click',()=>show('s-invoer'));
+
+loadAll();
+</script>
+</body>
+</html>
